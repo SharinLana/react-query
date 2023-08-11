@@ -7,6 +7,13 @@ const fetchData = () => {
 };
 
 export const RQSuperHeroesPage = () => {
+  const onSuccess = (data) => {
+    console.log("Performing side effect after successful data fetching", data);
+  };
+
+  const onError = (err) => {
+    console.log("Performing side effect after encountering error", err);
+  };
   // isLoading, data - same things as in the SuperHeroesPage component
   const { isLoading, data, isError, error, isFetching, refetch } = useQuery(
     "super-heroes",
@@ -17,7 +24,9 @@ export const RQSuperHeroesPage = () => {
       // refetchOnMount: true, // true - refetch data on every page mount; false - do NOT refetch data on mount; "always" - always refetch data on mount
       // refetchOnWindowFocus: true, // updates (refetches) the data every time when the mouse is focused on the page; other options: false, "always"
       // refetchInterval: 2000, // fetches data every 2 seconds. Inactive when the window is out of focus
-      enabled: false, // prevents data fetching on the page load
+      // enabled: false, // prevents data fetching on the page load
+      onSuccess: onSuccess,
+      onError: onError,
     }
   );
 
@@ -32,7 +41,7 @@ export const RQSuperHeroesPage = () => {
   return (
     <>
       <h2>React Query Super Heroes</h2>
-      <button onClick={refetch}>Fetch heroes</button>
+      {/* <button onClick={refetch}>Fetch heroes</button> */}
       {data?.data.map((hero) => {
         return <div key={hero.name}>{hero.name}</div>;
       })}

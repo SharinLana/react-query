@@ -316,7 +316,7 @@ If your data do not change at all or changes rarely, it's a good practice to blo
 
 ```
 const { isLoading, data, isError, error, isFetching } = useQuery("super-heroes", fetchData, {
-    staleTime: 100000 
+    staleTime: 100000
   });
 
   console.log(isFetching) // to check the status of fetching (true or false)
@@ -326,23 +326,29 @@ During this time the data will NOT be fetched again from the database, it will r
 The default value of the staleTime is 0.
 
 #### refetchOnMount
-- true - refetch data on every page mount; 
-- false - do NOT refetch data on mount; 
+
+- true - refetch data on every page mount;
+- false - do NOT refetch data on mount;
 - "always" - always refetch data on mount
 
 #### refetchOnWindowFocus
-- true - update (refetch) the data every time when the mouse is focused on the page; 
-other options: false, "always"
+
+- true - update (refetch) the data every time when the mouse is focused on the page;
+  other options: false, "always"
 
 #### refetchInterval
+
 If you are dealing with data that changes very frequently (every second, perhaps), then you may use the refetchInterval property to make sure that the data is always fresh.
-- refetchInterval: 2000 // will fetch data every 2 seconds. 
+
+- refetchInterval: 2000 // will fetch data every 2 seconds.
 
 NOTE: this feature is inactive if the window is out of focus.
 If you need the data to be refetched even when the window lost the focus, use
+
 #### refetchIntervalInBackground: true
 
 ### FETCH DATA ON A BUTTON CLICK
+
 1. use enabled:false configuration to prevent the data fetching process on the page load
 
 ```
@@ -379,3 +385,32 @@ return (
     </>
   );
 ```
+
+### PERFORM SIDE EFFECTS AFTER DATA FETCHING
+
+1. create 2 functions inside of the functional component:
+
+```
+  const onSuccess = (data) => {
+    console.log("Performing side effect after successful data fetching", data);
+  };
+
+  const onError = (err) => {
+    console.log("Performing side effect after encountering error", err);
+  };
+```
+
+2. pass them to the useQuery:
+
+```
+const { isLoading, data, isError, error, isFetching, refetch } = useQuery(
+    "super-heroes",
+    fetchData,
+    {
+      onSuccess: onSuccess,
+      onError: onError,
+    }
+  );
+```
+
+3. check the result in the console (modify the api path to get an error side effect)
