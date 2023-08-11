@@ -2,7 +2,7 @@
 
 > The SuperHeroes.page.js file holds the code with the traditional database connection method (through axios). The RQSuperHeroes.page.js file contains the code that handles the connection to the db via React Query.
 
-#### INSTALLATION
+### INSTALLATION
 
 1. `npx create-react-app react-query-demo --use npm`
 2. `npm i json-server` (to mock the database)
@@ -18,9 +18,9 @@
 
 `npm i axios react-query`
 
-#### FETCHING DATA
+### FETCHING DATA
 
-### Traditional way (see the SuperHeroes.page.js file)
+#### Traditional way (see the SuperHeroes.page.js file)
 
 1. Import useState, useEffect and axios:
 
@@ -104,7 +104,7 @@ export const SuperHeroesPage = () => {
 
 Done!
 
-### With React Query (see the App.js and RQSuperHeroes.page.js files)
+#### With React Query (see the App.js and RQSuperHeroes.page.js files)
 
 1. in the App.js, import QueryClientProvider and QueryClient
 
@@ -221,9 +221,9 @@ export const RQSuperHeroesPage = () => {
 
 Done!
 
-#### ERROR HANDLING
+### ERROR HANDLING
 
-### Traditional way (see the SuperHeroes.page.js file)
+#### Traditional way (see the SuperHeroes.page.js file)
 
 1. we use useState and catch block to handle the errors (to check the result in the browser, modify the path string):
 
@@ -255,7 +255,7 @@ export const SuperHeroesPage = () => {
 
 Done!
 
-### With React Query (see the RQSuperHeroes.page.js file)
+#### With React Query (see the RQSuperHeroes.page.js file)
 
 1. useQuery provides us with a specific constants for error handling: isError and error. Use them to check if the error exists and get the error message:
 
@@ -272,7 +272,7 @@ export const RQSuperHeroesPage = () => {
 
 Done!
 
-#### REACT QUERY DEVTOOLS
+### REACT QUERY DEVTOOLS
 
 1. in the App.js, import ReactQueryDevtools
 
@@ -298,7 +298,7 @@ function App() {
 
 Done!
 
-#### RQ CACHING DATA
+### RQ CACHING DATA
 
 React Query automatically caches data for 5 minutes. If you need to change this time, add the following argument to the useQuery hook:
 
@@ -310,7 +310,7 @@ const { isLoading, data, isError, error } = useQuery("super-heroes", fetchData, 
 
 It will change the caching time accordingly
 
-## staleTime
+#### staleTime
 
 If your data do not change at all or changes rarely, it's a good practice to block the fetching request for it to save the memory. It can be done with staleTime property.
 
@@ -325,22 +325,22 @@ const { isLoading, data, isError, error, isFetching } = useQuery("super-heroes",
 During this time the data will NOT be fetched again from the database, it will remain stale. If the data in the DB has been updated during this time, it will not be fetched and displayed on the screen until the staleTime is up.
 The default value of the staleTime is 0.
 
-## refetchOnMount
+#### refetchOnMount
 - true - refetch data on every page mount; 
 - false - do NOT refetch data on mount; 
 - "always" - always refetch data on mount
 
-## refetchOnWindowFocus
+#### refetchOnWindowFocus
 - true - update (refetch) the data every time when the mouse is focused on the page; 
 other options: false, "always"
 
-## refetchInterval
+#### refetchInterval
 If you are dealing with data that changes very frequently (every second, perhaps), then you may use the refetchInterval property to make sure that the data is always fresh.
 - refetchInterval: 2000 // will fetch data every 2 seconds. 
 
 NOTE: this feature is inactive if the window is out of focus.
 If you need the data to be refetched even when the window lost the focus, use
-## refetchIntervalInBackground: true
+#### refetchIntervalInBackground: true
 
 ### FETCH DATA ON A BUTTON CLICK
 1. use enabled:false configuration to prevent the data fetching process on the page load
