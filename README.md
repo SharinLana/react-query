@@ -1,4 +1,4 @@
-##### React Query demo (comparison with the traditional database connection method)
+## React Query demo (comparison with the traditional database connection method)
 
 > The SuperHeroes.page.js file holds the code with the traditional database connection method (through axios). The RQSuperHeroes.page.js file contains the code that handles the connection to the db via React Query.
 
