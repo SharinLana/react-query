@@ -1,4 +1,4 @@
-#### React Query demo (comparison with the traditional database connection method)
+##### React Query demo (comparison with the traditional database connection method)
 
 > The SuperHeroes.page.js file holds the code with the traditional database connection method (through axios). The RQSuperHeroes.page.js file contains the code that handles the connection to the db via React Query.
 
@@ -342,7 +342,7 @@ NOTE: this feature is inactive if the window is out of focus.
 If you need the data to be refetched even when the window lost the focus, use
 ## refetchIntervalInBackground: true
 
-### FETCH DATA ON THE BUTTON CLICK
+### FETCH DATA ON A BUTTON CLICK
 1. use enabled:false configuration to prevent the data fetching process on the page load
 
 ```
