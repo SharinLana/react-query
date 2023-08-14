@@ -15,10 +15,10 @@ export const useSuperHeroesData = (onSuccess, onError) => {
     // enabled: false, // prevents data fetching on the page load
     onSuccess: onSuccess,
     onError: onError,
-    select: (data) => {
-      const heroNames = data.data.map((hero) => hero.name);
-      // or you can use the filter() or reduce(), or any other methods here to format the result
-      return heroNames;
-    },
+    // select: (data) => {
+    //   const heroNames = data.data.map((hero) => hero.name);
+    //   // or you can use the filter() or reduce(), or any other methods here to format the result
+    //   return heroNames;
+    // },
   });
 };

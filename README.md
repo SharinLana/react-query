@@ -486,7 +486,7 @@ return (
     const onError = (err) => {
       console.log("Performing side effect after encountering error", err);
     };
-      
+
     const { isLoading, data, isError, error, isFetching, refetch } =
         useSuperHeroesData(onSuccess, onError);
 
@@ -505,4 +505,108 @@ return (
 
 Done!
 
+### QUERY BY ID (TO FETCH AND DISPLAY ITEM DETAILS)
 
+1. Create a new page to display the details about each super hero: RQSuperHero.page.js
+
+```
+  import React from "react";
+
+  export const RQSuperHeroPage = () => {
+    return <div>Super Hero Details</div>;
+  };
+
+```
+
+2. Configure the route to that page in App.js.
+
+```
+  import { RQSuperHeroPage } from "./components/RQSuperHero.page";
+
+  function App() {
+    return (
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <Routes>
+            <Route
+              path="/rq-super-heroes/:heroId"
+              element={<RQSuperHeroPage />}
+            />
+            <Route path="/rq-super-heroes" element={<RQSuperHeroesPage />} />
+          </Routes>
+        </BrowserRouter>
+        <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
+      </QueryClientProvider>
+    );
+  }
+```
+
+3. In the RQSuperHeroes.page.js, add a link from the super heroes list page to the super heroes details page:
+
+```
+  import { Link } from "react-router-dom";
+
+  return (
+    <>
+      <h2>React Query Super Heroes</h2>
+      {data?.data.map((hero) => {
+        return (
+          <div key={hero.id}>
+            <Link to={`/rq-super-heroes/${hero.id}`}>{hero.name}</Link>
+          </div>
+        );
+      })}
+    </>
+  );
+
+```
+
+Check the result in the browser
+
+4. Fetch a super hero by id and display the details in the UI
+
+  a. Create a new custom query hook in a separate file useSuperHeroData.js
+
+```
+  import axios from "axios";
+  import { useQuery } from "react-query";
+
+  const fetchHeroDetails = (heroId) => {
+    return axios.get(`http://localhost:4000/superheroes/${heroId}`);
+  };
+
+  export const useSuperHeroesData = (heroId) => {
+    return useQuery(["super-hero", heroId], () => fetchHeroDetails(heroId));
+    // Notes:
+    // ["super-hero", heroId]: a unique key + an id of a particular hero (eg.: ["super-hero","2"], or ["super-hero","3"])
+  };
+
+```
+
+  b. Display the hero details in the RQSuperHeroPage component
+
+```
+  import React from "react";
+  import { useParams } from "react-router-dom";
+  import { useSuperHeroesData } from "../hooks/useSuperHeroData";
+
+  export const RQSuperHeroPage = () => {
+    const { heroId } = useParams();
+    const { isLoading, isError, error, data } = useSuperHeroesData(heroId);
+
+    if (isLoading) {
+      return <h2>Loading...</h2>;
+    }
+
+    if (isError) {
+      return <h2>{error.message}</h2>;
+    }
+
+    return (
+      <div>
+        {data?.data.name} - {data?.data.alterEgo}
+      </div>
+    );
+  };
+
+```
