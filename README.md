@@ -415,12 +415,12 @@ return (
 
 3. check the result in the console (modify the api path to get an error side effect)
 
-
 ### TRANSFORM DATA INTO A SUITABLE FORMAT (EG. AN ARRAY OF NAMES ONLY) ON FETCHING
 
 1. Use option 'select' to fetch and format the data (for example, form an array of user names):
 
-  const { isLoading, data, isError, error, isFetching, refetch } = useQuery(
+```
+const { isLoading, data, isError, error, isFetching, refetch } = useQuery(
     "super-heroes",
     fetchData,
     {
@@ -432,13 +432,77 @@ return (
     }
   );
 
+```
+
 2. Now data = an array filled with names. Map through this array in the JSX code to display the names:
 
-  return (
+```
+return (
     <>
       <h2>React Query Super Heroes</h2>
       {data.map((heroName) => {
-        return <div key={heroName}>{heroName}</div>;
+      return <div key={heroName}>{heroName}</div>;
       })}
     </>
   );
+
+```
+
+### CUSTOM QUERY HOOK
+
+1. Create a new file useSuperHeroesData.js (preferably in the new folder) that will contain a custom query hook. The hook should return the useQuery hook with all the parameters that you think is necessary:
+
+```
+  import axios from "axios";
+  import { useQuery } from "react-query";
+
+  const fetchData = () => {
+    return axios.get("http://localhost:4000/superheroes");
+  };
+
+  export const useSuperHeroesData = (onSuccess, onError) => {
+    return useQuery("super-heroes", fetchData, {
+      onSuccess: onSuccess,
+      onError: onError,
+      select: (data) => {
+        const heroNames = data.data.map((hero) => hero.name);
+        return heroNames;
+      },
+    });
+  };
+```
+
+2. Import the hook into the component and call it there, passing all the required arguments (separately or as an object - it's up to you):
+
+```
+  import React from "react";
+  import { useSuperHeroesData } from "../hooks/useSuperHeroesData";
+
+  export const RQSuperHeroesPage = () => {
+    const onSuccess = (data) => {
+    console.log("Performing side effect after successful data fetching", data);
+    };
+
+    const onError = (err) => {
+      console.log("Performing side effect after encountering error", err);
+    };
+      
+    const { isLoading, data, isError, error, isFetching, refetch } =
+        useSuperHeroesData(onSuccess, onError);
+
+    return (
+      <>
+        <h2>React Query Super Heroes</h2>
+        {data.map((heroName) => {
+          return <div key={heroName}>{heroName}</div>;
+        })}
+      </>
+    );
+
+  };
+
+```
+
+Done!
+
+
