@@ -27,8 +27,14 @@ export const RQSuperHeroesPage = () => {
       // enabled: false, // prevents data fetching on the page load
       onSuccess: onSuccess,
       onError: onError,
+      select: (data) => {
+        const heroNames = data.data.map((hero) => hero.name);
+        // or you can use the filter() or reduce(), or any other methods here to format the result
+        return heroNames;
+      },
     }
   );
+  console.log(data)
 
   if (isLoading || isFetching) {
     return <h2>Loading...</h2>;
@@ -42,8 +48,11 @@ export const RQSuperHeroesPage = () => {
     <>
       <h2>React Query Super Heroes</h2>
       {/* <button onClick={refetch}>Fetch heroes</button> */}
-      {data?.data.map((hero) => {
+      {/* {data?.data.map((hero) => {
         return <div key={hero.name}>{hero.name}</div>;
+      })} */}
+      {data.map((heroName) => {
+        return <div key={heroName}>{heroName}</div>;
       })}
     </>
   );

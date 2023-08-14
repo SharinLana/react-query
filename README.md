@@ -403,7 +403,7 @@ return (
 2. pass them to the useQuery:
 
 ```
-const { isLoading, data, isError, error, isFetching, refetch } = useQuery(
+  const { isLoading, data, isError, error, isFetching, refetch } = useQuery(
     "super-heroes",
     fetchData,
     {
@@ -414,3 +414,31 @@ const { isLoading, data, isError, error, isFetching, refetch } = useQuery(
 ```
 
 3. check the result in the console (modify the api path to get an error side effect)
+
+
+### TRANSFORM DATA INTO A SUITABLE FORMAT (EG. AN ARRAY OF NAMES ONLY) ON FETCHING
+
+1. Use option 'select' to fetch and format the data (for example, form an array of user names):
+
+  const { isLoading, data, isError, error, isFetching, refetch } = useQuery(
+    "super-heroes",
+    fetchData,
+    {
+      select: (data) => {
+        const heroNames = data.data.map((hero) => hero.name);
+        // you can also use the filter() or reduce(), or any other methods here to format the result
+        return heroNames;
+      },
+    }
+  );
+
+2. Now data = an array filled with names. Map through this array in the JSX code to display the names:
+
+  return (
+    <>
+      <h2>React Query Super Heroes</h2>
+      {data.map((heroName) => {
+        return <div key={heroName}>{heroName}</div>;
+      })}
+    </>
+  );
