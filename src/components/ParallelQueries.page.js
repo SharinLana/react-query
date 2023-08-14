@@ -10,13 +10,13 @@ const fetchFriends = () => {
 };
 
 export const ParallelQueriesPage = () => {
-  const { data: superHeroes } = useQuery("super-heroes", fetchSuperHeroes);
+  const { data: superHeroes } = useQuery("heroes", fetchSuperHeroes);
   const { data: friends } = useQuery("friends", fetchFriends);
 
   return (
     <div>
       <h2>Parallel queries page</h2>
-      {/* <h4>Super Heroes</h4>
+      <h4>Super Heroes</h4>
       {superHeroes.data.map((hero) => (
         <div key={hero.id}>{hero.name}</div>
       ))}
@@ -24,7 +24,7 @@ export const ParallelQueriesPage = () => {
       <h4>Friends</h4>
       {friends.data.map((friend) => (
         <div key={friend.id}>{friend.name}</div>
-      ))} */}
+      ))}
     </div>
   );
 };

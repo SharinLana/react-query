@@ -627,7 +627,7 @@ Check the result in the browser
   };
 
   export const ParallelQueriesPage = () => {
-    const { data: superHeroes } = useQuery("super-heroes", fetchSuperHeroes);
+    const { data: superHeroes } = useQuery("heroes", fetchSuperHeroes);
     const { data: friends } = useQuery("friends", fetchFriends);
 
     return (
@@ -644,6 +644,49 @@ Check the result in the browser
         ))}
       </div>
     );
+  };
+
+```
+
+
+### DYNAMIC PARALLEL QUERIES (DynamicParallelQueries.page.js)
+Instead of useQuery() we use useQueries() hook:
+
+1. In App.js (pass the array of the heroIds as a prop to the component):
+
+```
+  import { DynamicParallelQueriesPage } from "./components/DynamicParallelQueries.page";
+
+  <Route path="/rq-dynamic-parallel" element={<DynamicParallelQueriesPage heroIds={[1, 3]} />} />
+```
+
+2. In DynamicParallelQueries.page.js:
+
+```
+  import axios from "axios";
+  import { useQueries } from "react-query";
+
+  // heroId is the dynamic part of the query
+  const fetchSuperHero = (heroId) => {
+    return axios.get(`http://localhost:4000/superheroes/${heroId}`);
+  };
+
+  // { heroIds } as a prop came from App.js
+  export const DynamicParallelQueriesPage = ({ heroIds }) => {
+    const queryResults = useQueries(
+      heroIds.map((heroId) => {
+        return {
+          queryKey: ["superHero", heroId],
+          queryFn: () => fetchSuperHero(heroId),
+        };
+      })
+    );
+
+    console.log({ queryResults });
+    /* queryResults: Array(2):
+      0: {status: 'success', isLoading: false, isSuccess: true, isError: false, isIdle: false, …}
+      1: {status: 'success', isLoading: false, isSuccess: true, isError: false, isIdle: false, …}
+    */
   };
 
 ```
