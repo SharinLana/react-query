@@ -15,5 +15,19 @@
       "name": "Wonder Woman 2",
       "alterEgo": "Princess Diana"
     }
+  ],
+  "friends": [
+    {
+      "id": 1,
+      "name": "Rachel Green"
+    },
+    {
+      "id": 2,
+      "name": "Ross Geller"
+    },
+    {
+      "id": 3,
+      "name": "Monica Geller"
+    }
   ]
 }
