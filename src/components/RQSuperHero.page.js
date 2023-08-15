@@ -1,10 +1,10 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { useSuperHeroesData } from "../hooks/useSuperHeroData";
+import { useSuperHeroData } from "../hooks/useSuperHeroData";
 
 export const RQSuperHeroPage = () => {
   const { heroId } = useParams();
-  const { isLoading, isError, error, data } = useSuperHeroesData(heroId);
+  const { isLoading, isError, error, data } = useSuperHeroData(heroId);
 
   if (isLoading) {
     return <h2>Loading...</h2>;
