@@ -649,7 +649,7 @@ Check the result in the browser
 ```
 
 
-### DYNAMIC PARALLEL QUERIES (DynamicParallelQueries.page.js)
+### DYNAMIC PARALLEL QUERIES: queries is being executed simultaneously (DynamicParallelQueries.page.js)
 Instead of useQuery() we use useQueries() hook:
 
 1. In App.js (pass the array of the heroIds as a prop to the component):
@@ -687,6 +687,60 @@ Instead of useQuery() we use useQueries() hook:
       0: {status: 'success', isLoading: false, isSuccess: true, isError: false, isIdle: false, …}
       1: {status: 'success', isLoading: false, isSuccess: true, isError: false, isIdle: false, …}
     */
+  };
+
+```
+
+
+### DEPENDENT QUERIES: queries is being executed one after the other, the result of the second query depends on the result of the first query (DependentQueries.page.js)
+
+In the DependentQueries.page.js we want to get the courses that are connected to the email "lana@gmail.com" that the component receives as a prop from App.js
+We also have new fields in the db.json: "users" with id = the email address and "courses" (see db.json)
+
+1. In the DependentQueries.page.js, fetch the user using the "email" prop and get his "channelId" property from the DB:
+
+```
+  import axios from "axios";
+  import { useQuery } from "react-query";
+
+  const fetchUser = (email) => {
+    return axios.get(`/api/users/${email}`);
+  };
+
+  export const DependentQueriesPage = ({ email }) => {
+    const { data: user } = useQuery(["user", email], () => fetchUser(email));
+    const channelId = user?.data.channelId;
+    
+    return <div>Depentent Queries</div>;
+  };
+
+```
+
+2. Find the courses, associated with this channelId, and fetch them.
+
+```
+  import axios from "axios";
+  import { useQuery } from "react-query";
+
+  const fetchUser = (email) => {
+    return axios.get(`http://localhost:4000/users/${email}`);
+  };
+
+  const fetchCoursesByChannelId = (channelId) => {
+    return axios.get(`http://localhost:4000/channels/${channelId}`);
+  };
+
+  export const DependentQueriesPage = ({ email }) => {
+    const { data: user } = useQuery(["user", email], () => fetchUser(email));
+    const channelId = user?.data.channelId;
+
+    const {data: courses} = useQuery(["courses", channelId], () => fetchCoursesByChannelId(channelId), {
+      enabled: !!channelId, // double negation transform the value to a boolean (true or false)
+    });
+
+    console.log(courses?.data.courses)
+
+    return <div>Dependent Queries</div>;
   };
 
 ```

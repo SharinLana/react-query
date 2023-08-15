@@ -29,5 +29,19 @@
       "id": 3,
       "name": "Monica Geller"
     }
+  ],
+  "users": [
+    {
+      "id": "lana@gmail.com",
+      "channelId": "codeline"
+    }
+    
+
+  ],
+  "channels": [
+    {
+      "id": "codeline",
+      "courses": ["react", "vue", "angular"]
+    }
   ]
 }
