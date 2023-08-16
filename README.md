@@ -780,3 +780,10 @@ export const useSuperHeroData = (heroId) => {
 };
 
 ```
+
+
+### PAGINATED QUERIES (PaginatedQueries.page.js)
+
+Use queries like "limit" and "page" to set the number of the items per page.
+Also use keepPreviousData: true option to use the cached data and prevent dispalying the Loading... message on every button click
+
