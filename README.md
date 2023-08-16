@@ -970,4 +970,45 @@ PostingData.page.js:
 
 Transform the useAddDataToDB hook as shown in the hooks/useSuperHeroesData.js
 
-### AXIOS INTERCEPTOR
+
+### AXIOS INTERCEPTOR (making the default path for all requests, like proxy)
+
+1. Create a util function "request"
+
+utils/axios-utils.js
+
+```
+  import axios from "axios";
+
+  const client = axios.create({ baseURL: "http://localhost:4000" });
+
+  // ...options = all options of axios
+  export const request = ({ ...options }) => {
+    client.defaults.headers.common.Authorization = `Bearer token`;
+    const onSuccess = (response) => response;
+    const onError = (error) => {
+      // optionally catch errors and add additional logging here
+      return error;
+    };
+
+    return client(options).then(onSuccess).catch(onError);
+  };
+
+```
+
+2. Import this function in the custom hooks file or components where you need to use axios and use it in the callback functions:
+
+hooks/useSuperHeroesData.js
+
+```
+import { request } from "../utils/axios-utils";
+
+const fetchData = () => {
+  return request({ url: "/superheroes" });
+};
+
+const addDataToDB = (hero) => {
+  return request({ url: "/superheroes", method: "post", data: hero });
+};
+
+```
