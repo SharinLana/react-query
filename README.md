@@ -565,7 +565,7 @@ Check the result in the browser
 
 4. Fetch a super hero by id and display the details in the UI
 
-  a. Create a new custom query hook in a separate file useSuperHeroData.js
+a. Create a new custom query hook in a separate file useSuperHeroData.js
 
 ```
   import axios from "axios";
@@ -583,7 +583,7 @@ Check the result in the browser
 
 ```
 
-  b. Display the hero details in the RQSuperHeroPage component
+b. Display the hero details in the RQSuperHeroPage component
 
 ```
   import React from "react";
@@ -610,7 +610,6 @@ Check the result in the browser
   };
 
 ```
-
 
 ### PARALLEL QUERIES (ParallelQueries.page.js)
 
@@ -648,8 +647,8 @@ Check the result in the browser
 
 ```
 
-
 ### DYNAMIC PARALLEL QUERIES: queries is being executed simultaneously (DynamicParallelQueries.page.js)
+
 Instead of useQuery() we use useQueries() hook:
 
 1. In App.js (pass the array of the heroIds as a prop to the component):
@@ -691,7 +690,6 @@ Instead of useQuery() we use useQueries() hook:
 
 ```
 
-
 ### DEPENDENT QUERIES: queries is being executed one after the other, the result of the second query depends on the result of the first query (DependentQueries.page.js)
 
 In the DependentQueries.page.js we want to get the courses that are connected to the email "lana@gmail.com" that the component receives as a prop from App.js
@@ -710,7 +708,7 @@ We also have new fields in the db.json: "users" with id = the email address and 
   export const DependentQueriesPage = ({ email }) => {
     const { data: user } = useQuery(["user", email], () => fetchUser(email));
     const channelId = user?.data.channelId;
-    
+
     return <div>Depentent Queries</div>;
   };
 
@@ -744,7 +742,6 @@ We also have new fields in the db.json: "users" with id = the email address and 
   };
 
 ```
-
 
 ### INITIAL QUERY DATA (using data from cache, not fetching it from the db on the component mount) with useQueryClient hook (useSuperHeroData.js)
 
@@ -781,20 +778,17 @@ export const useSuperHeroData = (heroId) => {
 
 ```
 
-
 ### PAGINATED QUERIES (PaginatedQueries.page.js)
 
 Use queries like "limit" and "page" to set the number of the items per page.
 Also use keepPreviousData: true option to use the cached data and prevent dispalying the Loading... message on every button click
-
 
 ### INFINITE QUERIES (InfiniteQueries.page.js)
 
 To load more data on every button click.
 Here we are using the useInfiniteQuery() hook + getNexPageParam option
 
-
-### MUTATIONS / POSTING DATA (PostingData.page.js)
+### MUTATIONS / POSTING DATA (PostingData.page.js + hooks/useSuperHeroesData.js)
 
 1. Use the useMutation hook and pass in the function that is making the POST request:
 
@@ -855,4 +849,57 @@ export const PostingDataPage = () => {
 
 ```
 
-Done! The new hero is in the DB. You can also use custom hooks useSuperHeroesData() and useSuperHeroData() to fetch and display the new hero on the screen
+Done! The new hero is in the DB. You can also use custom hooks useSuperHeroesData() and useSuperHeroData() to fetch and display the new hero on the screen.
+
+### QUERY INVALIDATION - Automatically refetching new data after the POST request succeeds (PostingData.page.js + hooks/useSuperHeroesData.js)
+
+1. In the file with the custom hook useAddDataToDB(), import useQueryClient and use its instance inside of the custom hook to automatically refetch the updated data on success:
+
+hooks/useSuperHeroesData.js
+
+```
+  import axios from "axios";
+  import { useQuery, useMutation, useQueryClient } from "react-query";
+
+  const addDataToDB = (hero) => {
+    return axios.post("http://localhost:4000/superheroes", hero);
+  }
+
+  export const useAddDataToDB = () => {
+    const queryClient = useQueryClient();
+    return useMutation(addDataToDB, {
+      onSuccess: () => {
+        queryClient.invalidateQueries("super-heroes"); // use the key from the func that fetches all the heroes
+      }
+    })
+  }
+
+```
+
+2. Fetch and display the updated data in the component using the custom hook useSuperHeroesData() created before.
+
+PostingData.page.js:
+
+```
+  import {useAddDataToDB, useSuperHeroesData} from "../hooks/useSuperHeroesData";
+
+  export const PostingDataPage = () => {
+    const {
+      isLoading: getRequestIsLoading,
+      isError: getRequestIsError,
+      error: getRequestError,
+      data,
+    } = useSuperHeroesData();
+
+    console.log(data?.data)
+
+
+    return (
+      <>
+
+      </>
+    );
+  };
+
+
+```

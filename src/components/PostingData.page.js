@@ -1,11 +1,28 @@
 import React, { useState } from "react";
-import { useAddDataToDB } from "../hooks/useSuperHeroesData";
+import {
+  useAddDataToDB,
+  useSuperHeroesData,
+} from "../hooks/useSuperHeroesData";
 
 export const PostingDataPage = () => {
   const [name, setName] = useState("");
   const [alterEgo, setAlterEgo] = useState("");
 
-  const { mutate: addHero, isLoading, isError, error } = useAddDataToDB();
+  const {
+    mutate: addHero,
+    isLoading: postRequestIsLoading,
+    isError: postRequestIsError,
+    error: postRequestError,
+  } = useAddDataToDB();
+
+  const {
+    isLoading: getRequestIsLoading,
+    isError: getRequestIsError,
+    error: getRequestError,
+    data,
+  } = useSuperHeroesData();
+
+  console.log(data?.data)
 
   const handlePostRequest = () => {
     const hero = { name, alterEgo };
