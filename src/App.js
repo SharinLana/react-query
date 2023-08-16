@@ -9,6 +9,7 @@ import { ParallelQueriesPage } from "./components/ParallelQueries.page";
 import { DynamicParallelQueriesPage } from "./components/DynamicParallelQueries.page";
 import { DependentQueriesPage } from "./components/DependentQueries.page";
 import { PaginatedQueriesPage } from "./components/PaginatedQueries.page";
+import { InfiniteQueriesPage } from "./components/InfiniteQueries.page";
 import "./App.css";
 
 const queryClient = new QueryClient();
@@ -43,6 +44,9 @@ function App() {
               <li>
                 <Link to="/rq-paginated">RQ Paginated Queries</Link>
               </li>
+              <li>
+                <Link to="/rq-infinite">RQ Infinite Queries</Link>
+              </li>
             </ul>
           </nav>
         </div>
@@ -64,6 +68,7 @@ function App() {
             element={<DependentQueriesPage email="lana@gmail.com" />}
           />
           <Route path="/rq-paginated" element={<PaginatedQueriesPage />} />
+          <Route path="/rq-infinite" element={<InfiniteQueriesPage />} />
         </Routes>
       </BrowserRouter>
       <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />

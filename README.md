@@ -787,3 +787,6 @@ export const useSuperHeroData = (heroId) => {
 Use queries like "limit" and "page" to set the number of the items per page.
 Also use keepPreviousData: true option to use the cached data and prevent dispalying the Loading... message on every button click
 
+### INFINITE QUERIES (InfiniteQueries.page.js)
+
+To load more data on every button click
