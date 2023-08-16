@@ -903,3 +903,71 @@ PostingData.page.js:
 
 
 ```
+
+
+### USING MUTATION RESPONSE TO UPDATE THE QUERY DATA (so no data refetching is needed: we will use the response of the POST request to update the data). (PostingData.page.js + hooks/useSuperHeroesData.js)
+
+1. Do do that, we need to use another queryClient method: setQueryData() instead od the invalidateQueries() that we used on the previous step:
+
+hooks/useSuperHeroesData.js
+
+```
+  import axios from "axios";
+  import { useQuery, useMutation, useQueryClient } from "react-query";
+
+  const addDataToDB = (hero) => {
+    return axios.post("http://localhost:4000/superheroes", hero);
+  }
+
+  export const useAddDataToDB = () => {
+    const queryClient = useQueryClient();
+    return useMutation(addDataToDB, {
+      onSuccess: () => {
+        queryClient.setQueryData("super-heroes", (oldQueryData) => {
+        return {
+          ...oldQueryData, // the data from cache
+          data: [...oldQueryData.data, data.data],
+        };
+      });
+      }
+    })
+  }
+
+```
+
+2. Use useAddDataToDB hook in the component to post the entered data.
+
+3. Fetch and display the updated data in the component using the custom hook useSuperHeroesData() created before.
+
+PostingData.page.js:
+
+```
+  import {useAddDataToDB, useSuperHeroesData} from "../hooks/useSuperHeroesData";
+
+  export const PostingDataPage = () => {
+    const {
+      isLoading: getRequestIsLoading,
+      isError: getRequestIsError,
+      error: getRequestError,
+      data,
+    } = useSuperHeroesData();
+
+    console.log(data?.data)
+
+
+    return (
+      <>
+
+      </>
+    );
+  };
+
+
+```
+
+
+### OPTIMISTIC UPDATES imply updating the state BEFORE performing a mutation (post, put, delete requests) under an assumption that nothing can go wrong
+
+Transform the useAddDataToDB hook as shown in the hooks/useSuperHeroesData.js
+
+### AXIOS INTERCEPTOR

@@ -7,7 +7,7 @@ const fetchData = () => {
 
 const addDataToDB = (hero) => {
   return axios.post("http://localhost:4000/superheroes", hero);
-}
+};
 
 export const useSuperHeroesData = (onSuccess, onError) => {
   return useQuery("super-heroes", fetchData, {
@@ -30,8 +30,39 @@ export const useSuperHeroesData = (onSuccess, onError) => {
 export const useAddDataToDB = () => {
   const queryClient = useQueryClient();
   return useMutation(addDataToDB, {
-    onSuccess: () => {
-      queryClient.invalidateQueries("super-heroes"); // use the key from the func that fetches all the heroes
-    }
-  })
-}
+    // !USING MUTATION RESPONSE TECHNIQUE TO UPDATE THE QUERY DATA
+    // onSuccess: (data) => {
+    //   // queryClient.invalidateQueries("super-heroes"); // use the key from the func that fetches all the heroes
+    //   queryClient.setQueryData("super-heroes", (oldQueryData) => {
+    //     return {
+    //       ...oldQueryData, // the data from cache
+    //       data: [...oldQueryData.data, data.data],
+    //     };
+    //   });
+    // },
+
+    // ! OPTIMISTIC UPDATES TECHNIQUE
+    onMutate: async (hero) => {
+      await queryClient.cancelQueries("super-heroes");
+      const previousData = queryClient.getQueryData("super-heroes");
+
+      queryClient.setQueryData("super-heroes", (oldQueryData) => {
+        return {
+          data: [
+            ...oldQueryData.data, // the data from cache
+            { id: oldQueryData?.data?.length + 1, ...hero }, // may use any other technique to set the id for the new hero
+          ],
+        };
+      });
+
+      return { previousData };
+    },
+
+    onError: (_error, hero, context) => {
+      queryClient.setQueryData("super-heroes", context.previousData);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries("super-heroes"); // fetch the updated data
+    },
+  });
+};
