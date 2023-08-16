@@ -789,4 +789,5 @@ Also use keepPreviousData: true option to use the cached data and prevent dispal
 
 ### INFINITE QUERIES (InfiniteQueries.page.js)
 
-To load more data on every button click
+To load more data on every button click.
+Here we are using the useInfiniteQuery() hook + getNexPageParam option
