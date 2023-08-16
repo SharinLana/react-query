@@ -787,7 +787,72 @@ export const useSuperHeroData = (heroId) => {
 Use queries like "limit" and "page" to set the number of the items per page.
 Also use keepPreviousData: true option to use the cached data and prevent dispalying the Loading... message on every button click
 
+
 ### INFINITE QUERIES (InfiniteQueries.page.js)
 
 To load more data on every button click.
 Here we are using the useInfiniteQuery() hook + getNexPageParam option
+
+
+### MUTATIONS / POSTING DATA (PostingData.page.js)
+
+1. Use the useMutation hook and pass in the function that is making the POST request:
+
+hooks/useSuperHeroesData.js
+
+```
+  import axios from "axios";
+  import { useMutation } from "react-query";
+
+  const addDataToDB = (hero) => {
+    return axios.post("http://localhost:4000/superheroes", hero);
+  }
+
+  export const useAddDataToDB = () => {
+    return useMutation(addDataToDB)
+  }
+
+```
+
+2. Invoke the useAddDataToDB() function in the component, retrieve the "mutate" property out of it, and pass the entered values into this property:
+
+PostingData.page.js
+
+```
+import React, { useState } from "react";
+import { useAddDataToDB } from "../hooks/useSuperHeroesData";
+
+export const PostingDataPage = () => {
+  const [name, setName] = useState("");
+  const [alterEgo, setAlterEgo] = useState("");
+
+  const { mutate: addHero } = useAddDataToDB();
+
+  const handlePostRequest = () => {
+    const hero = { name, alterEgo };
+    addHero(hero);
+  };
+
+  return (
+    <>
+      <h2>Posting data</h2>
+      <input
+        type="text"
+        placeholder="Hero name"
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+      />
+      <input
+        type="text"
+        placeholder="Alter ego"
+        value={alterEgo}
+        onChange={(e) => setAlterEgo(e.target.value)}
+      />
+      <button onClick={handlePostRequest}>Submit</button>
+    </>
+  );
+};
+
+```
+
+Done! The new hero is in the DB. You can also use custom hooks useSuperHeroesData() and useSuperHeroData() to fetch and display the new hero on the screen

@@ -1,9 +1,13 @@
 import axios from "axios";
-import { useQuery } from "react-query";
+import { useQuery, useMutation } from "react-query";
 
 const fetchData = () => {
   return axios.get("http://localhost:4000/superheroes");
 };
+
+const addDataToDB = (hero) => {
+  return axios.post("http://localhost:4000/superheroes", hero);
+}
 
 export const useSuperHeroesData = (onSuccess, onError) => {
   return useQuery("super-heroes", fetchData, {
@@ -22,3 +26,7 @@ export const useSuperHeroesData = (onSuccess, onError) => {
     // },
   });
 };
+
+export const useAddDataToDB = () => {
+  return useMutation(addDataToDB)
+}

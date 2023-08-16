@@ -14,6 +14,11 @@
       "id": 3,
       "name": "Wonder Woman 2",
       "alterEgo": "Princess Diana"
+    },
+    {
+      "name": "The Flash",
+      "alterEgo": "Barry Allen",
+      "id": 4
     }
   ],
   "friends": [
@@ -35,13 +40,15 @@
       "id": "lana@gmail.com",
       "channelId": "codeline"
     }
-    
-
   ],
   "channels": [
     {
       "id": "codeline",
-      "courses": ["react", "vue", "angular"]
+      "courses": [
+        "react",
+        "vue",
+        "angular"
+      ]
     }
   ],
   "colors": [
